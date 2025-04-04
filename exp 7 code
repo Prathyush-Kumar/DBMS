@@ -1,0 +1,1188 @@
+https://anotepad.com/notes/5s6wjjps
+
+
+
+
+Enter password: ****
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+
+Your MySQL connection id is 8
+
+Server version: 9.1.0 MySQL Community Server - GPL
+
+
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+
+affiliates. Other names may be trademarks of their respective
+
+owners.
+
+
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+
+
+mysql> CREATE TABLE Customers (
+
+    ->     customer_id INT PRIMARY KEY,
+
+    ->     first_name VARCHAR(100),
+
+    ->     last_name VARCHAR(100),
+
+    ->     age INT,
+
+    ->     country VARCHAR(100)
+
+    -> );
+
+ERROR 1046 (3D000): No database selected
+
+mysql> create database;
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+
+mysql> create Database;
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+
+mysql> show databases;
+
++--------------------+
+
+| Database           |
+
++--------------------+
+
+| accounts           |
+
+| captain            |
+
+| cse_gen            |
+
+| customer           |
+
+| experiment4        |
+
+| information_schema |
+
+| lokesh_173         |
+
+| money              |
+
+| mysql              |
+
+| paisa              |
+
+| performance_schema |
+
+| sales              |
+
+| surya              |
+
+| sys                |
+
+| taksir_081         |
+
++--------------------+
+
+15 rows in set (0.00 sec)
+
+
+
+mysql> use accounts;
+
+Database changed
+
+mysql> CREATE TABLE Customers (
+
+    ->     customer_id INT PRIMARY KEY,
+
+    ->     first_name VARCHAR(100),
+
+    ->     last_name VARCHAR(100),
+
+    ->     age INT,
+
+    ->     country VARCHAR(100)
+
+    -> );
+
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+mysql> CREATE TABLE Departments (
+
+    ->     department_id INT PRIMARY KEY,
+
+    ->     department_name VARCHAR(100)
+
+    -> );
+
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+mysql> CREATE TABLE Employees (
+
+    ->     employee_id INT PRIMARY KEY,
+
+    ->     employee_name VARCHAR(100),
+
+    ->     salary DECIMAL(10, 2),
+
+    ->     department_id INT,
+
+    ->     FOREIGN KEY (department_id) REFERENCES Departments(department_id)
+
+    -> );
+
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+mysql> CREATE TABLE Orders (
+
+    ->     order_id INT PRIMARY KEY,
+
+    ->     item VARCHAR(100),
+
+    ->     amount DECIMAL(10, 2),
+
+    ->     customer_id INT,
+
+    ->     FOREIGN KEY (customer_id) REFERENCES Customers(customer_id)
+
+    -> );
+
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+mysql> CREATE TABLE Shippings (
+
+    ->     shipping_id INT PRIMARY KEY,
+
+    ->     status VARCHAR(50),
+
+    ->     customer INT,
+
+    ->     FOREIGN KEY (customer) REFERENCES Customers(customer_id)
+
+    -> );
+
+Query OK, 0 rows affected (0.02 sec)
+
+
+
+mysql> DELIMITER $$
+
+mysql>
+
+mysql> CREATE PROCEDURE fetch_all_employees()
+
+    -> BEGIN
+
+    ->     DECLARE done INT DEFAULT 0;
+
+    ->     DECLARE emp_name VARCHAR(100);
+
+    ->     DECLARE emp_salary DECIMAL(10, 2);
+
+    ->
+
+    ->     -- Declare the cursor
+
+    ->     DECLARE emp_cursor CURSOR FOR
+
+    ->         SELECT employee_name, salary FROM Employees;
+
+    ->
+
+    ->     -- Declare the continue handler
+
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    ->
+
+    ->     -- Open the cursor
+
+    ->     OPEN emp_cursor;
+
+    ->
+
+    ->     -- Loop through the cursor
+
+    ->     read_loop: LOOP
+
+    ->         FETCH emp_cursor INTO emp_name, emp_salary;
+
+    ->         IF done THEN
+
+    ->             LEAVE read_loop;
+
+    ->         END IF;
+
+    ->         -- Print the employee details
+
+    ->         SELECT emp_name AS "Employee Name", emp_salary AS "Salary";
+
+    ->     END LOOP;
+
+    ->
+
+    ->     -- Close the cursor
+
+    ->     CLOSE emp_cursor;
+
+    -> END$$
+
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+mysql>
+
+mysql> DELIMITER ;
+
+mysql> CALL fetch_all_employees();
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> -- Insert data into Customers table
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> INSERT INTO Customers (customer_id, first_name, last_name, age, country)
+
+    -> VALUES
+
+    -> (1, 'John', 'Doe', 31, 'USA'),
+
+    -> (2, 'Robert', 'Luna', 22, 'USA'),
+
+    -> (3, 'David', 'Robinson', 22, 'UK'),
+
+    -> (4, 'John', 'Reinhardt', 25, 'UK'),
+
+    -> (5, 'Betty', 'Doe', 28, 'UAE');
+
+Query OK, 5 rows affected (0.00 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+
+mysql>
+
+mysql> -- Insert data into Departments table
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> INSERT INTO Departments (department_id, department_name)
+
+    -> VALUES
+
+    -> (10, 'Sales_add'),
+
+    -> (20, 'Marketing'),
+
+    -> (30, 'HR'),
+
+    -> (40, 'IT');
+
+Query OK, 4 rows affected (0.00 sec)
+
+Records: 4  Duplicates: 0  Warnings: 0
+
+
+
+mysql>
+
+mysql> -- Insert data into Employees table
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> INSERT INTO Employees (employee_id, employee_name, salary, department_id)
+
+    -> VALUES
+
+    -> (1, 'Shyam', 5500, 10),
+
+    -> (2, 'Surya', 4500, 20),
+
+    -> (3, 'Haneef', 6000, 10),
+
+    -> (4, 'Alfred', 7000, 30),
+
+    -> (5, 'Sunder', 8000, 40);
+
+Query OK, 5 rows affected (0.00 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+
+mysql>
+
+mysql> -- Insert data into Orders table
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> INSERT INTO Orders (order_id, item, amount, customer_id)
+
+    -> VALUES
+
+    -> (1, 'Keyboard', 400, 4),
+
+    -> (2, 'Mouse', 300, 4),
+
+    -> (3, 'Monitor', 12000, 3),
+
+    -> (4, 'Keyboard', 400, 1),
+
+    -> (5, 'Mousepad', 250, 2);
+
+Query OK, 5 rows affected (0.00 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+
+mysql>
+
+mysql> -- Insert data into Shippings table
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> INSERT INTO Shippings (shipping_id, status, customer)
+
+    -> VALUES
+
+    -> (1, 'Pending', 2),
+
+    -> (2, 'Pending', 4),
+
+    -> (3, 'Delivered', 3),
+
+    -> (4, 'Pending', 5),
+
+    -> (5, 'Delivered', 1);
+
+Query OK, 5 rows affected (0.00 sec)
+
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+
+mysql> DELIMITER $$
+
+mysql>
+
+mysql> CREATE PROCEDURE fetch_all_employees()
+
+    -> BEGIN
+
+    ->     DECLARE done INT DEFAULT 0;
+
+    ->     DECLARE emp_name VARCHAR(100);
+
+    ->     DECLARE emp_salary DECIMAL(10, 2);
+
+    ->
+
+    ->     -- Declare the cursor
+
+    ->     DECLARE emp_cursor CURSOR FOR
+
+    ->         SELECT employee_name, salary FROM Employees;
+
+    ->
+
+    ->     -- Declare the continue handler
+
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    ->
+
+    ->     -- Open the cursor
+
+    ->     OPEN emp_cursor;
+
+    ->
+
+    ->     -- Loop through the cursor
+
+    ->     read_loop: LOOP
+
+    ->         FETCH emp_cursor INTO emp_name, emp_salary;
+
+    ->         IF done THEN
+
+    ->             LEAVE read_loop;
+
+    ->         END IF;
+
+    ->         -- Print the employee details
+
+    ->         SELECT emp_name AS "Employee Name", emp_salary AS "Salary";
+
+    ->     END LOOP;
+
+    ->
+
+    ->     -- Close the cursor
+
+    ->     CLOSE emp_cursor;
+
+    -> END$$
+
+ERROR 1304 (42000): PROCEDURE fetch_all_employees already exists
+
+mysql>
+
+mysql> DELIMITER ;
+
+mysql> CALL fetch_all_employees();
+
++---------------+---------+
+
+| Employee Name | Salary  |
+
++---------------+---------+
+
+| Shyam         | 5500.00 |
+
++---------------+---------+
+
+1 row in set (0.00 sec)
+
+
+
++---------------+---------+
+
+| Employee Name | Salary  |
+
++---------------+---------+
+
+| Surya         | 4500.00 |
+
++---------------+---------+
+
+1 row in set (0.00 sec)
+
+
+
++---------------+---------+
+
+| Employee Name | Salary  |
+
++---------------+---------+
+
+| Haneef        | 6000.00 |
+
++---------------+---------+
+
+1 row in set (0.00 sec)
+
+
+
++---------------+---------+
+
+| Employee Name | Salary  |
+
++---------------+---------+
+
+| Alfred        | 7000.00 |
+
++---------------+---------+
+
+1 row in set (0.00 sec)
+
+
+
++---------------+---------+
+
+| Employee Name | Salary  |
+
++---------------+---------+
+
+| Sunder        | 8000.00 |
+
++---------------+---------+
+
+1 row in set (0.01 sec)
+
+
+
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+mysql> DELIMITER $$
+
+mysql>
+
+mysql> CREATE PROCEDURE fetch_employees_by_dept(IN dept_id INT)
+
+    -> BEGIN
+
+    ->     DECLARE done INT DEFAULT 0;
+
+    ->     DECLARE emp_name VARCHAR(100);
+
+    ->     DECLARE emp_salary DECIMAL(10, 2);
+
+    ->     DECLARE dept_id_val INT;
+
+    ->
+
+    ->     -- Declare the cursor
+
+    ->     DECLARE emp_cursor CURSOR FOR
+
+    ->         SELECT employee_name, salary, department_id
+
+    ->         FROM Employees
+
+    ->         WHERE department_id = dept_id;
+
+    ->
+
+    ->     -- Declare the continue handler
+
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    ->
+
+    ->     -- Open the cursor
+
+    ->     OPEN emp_cursor;
+
+    ->
+
+    ->     -- Loop through the cursor
+
+    ->     read_loop: LOOP
+
+    ->         FETCH emp_cursor INTO emp_name, emp_salary, dept_id_val;
+
+    ->         IF done THEN
+
+    ->             LEAVE read_loop;
+
+    ->         END IF;
+
+    ->         -- Print the employee details
+
+    ->         SELECT emp_name AS "Employee Name", emp_salary AS "Salary", dept_id_val AS "Department ID";
+
+    ->     END LOOP;
+
+    ->
+
+    ->     -- Close the cursor
+
+    ->     CLOSE emp_cursor;
+
+    -> END$$
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql>
+
+mysql> DELIMITER ;
+
+mysql> CALL fetch_employees_by_dept(10);
+
++---------------+---------+---------------+
+
+| Employee Name | Salary  | Department ID |
+
++---------------+---------+---------------+
+
+| Shyam         | 5500.00 |            10 |
+
++---------------+---------+---------------+
+
+1 row in set (0.00 sec)
+
+
+
++---------------+---------+---------------+
+
+| Employee Name | Salary  | Department ID |
+
++---------------+---------+---------------+
+
+| Haneef        | 6000.00 |            10 |
+
++---------------+---------+---------------+
+
+1 row in set (0.00 sec)
+
+
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> DELIMITER $$
+
+mysql>
+
+mysql> CREATE PROCEDURE fetch_high_salary_employees()
+
+    -> BEGIN
+
+    ->     -- Looping directly with a FOR loop (simpler in MySQL 5.0+)
+
+    ->     DECLARE emp_name VARCHAR(100);
+
+    ->     DECLARE emp_salary DECIMAL(10, 2);
+
+    ->
+
+    ->     -- Declare the cursor
+
+    ->     DECLARE emp_cursor CURSOR FOR
+
+    ->         SELECT employee_name, salary
+
+    ->         FROM Employees
+
+    ->         WHERE salary > 5000;
+
+    ->
+
+    ->     -- Open the cursor
+
+    ->     OPEN emp_cursor;
+
+    ->
+
+    ->     -- FOR loop to fetch and display employee details
+
+    ->     read_loop: LOOP
+
+    ->         FETCH emp_cursor INTO emp_name, emp_salary;
+
+    ->         IF NOT FOUND THEN
+
+    ->             LEAVE read_loop;
+
+    ->         END IF;
+
+    ->         -- Print the employee details
+
+    ->         SELECT emp_name AS "Employee Name", emp_salary AS "Salary";
+
+    ->     END LOOP;
+
+    ->
+
+    ->     -- Close the cursor
+
+    ->     CLOSE emp_cursor;
+
+    -> END$$
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql>
+
+mysql> DELIMITER ;
+
+mysql> CALL fetch_high_salary_employees();
+
+ERROR 1054 (42S22): Unknown column 'FOUND' in 'field list'
+
+mysql> DELIMITER $$
+
+mysql>
+
+mysql> CREATE PROCEDURE delete_sales_add_employees()
+
+    -> BEGIN
+
+    ->     DECLARE done INT DEFAULT 0;
+
+    ->     DECLARE emp_id INT;
+
+    ->
+
+    ->     -- Declare the cursor to fetch employees from 'Sales_add' department
+
+    ->     DECLARE emp_cursor CURSOR FOR
+
+    ->         SELECT employee_id
+
+    ->         FROM Employees
+
+    ->         WHERE department_id = (SELECT department_id FROM Departments WHERE department_name = 'Sales_add');
+
+    ->
+
+    ->     -- Declare the continue handler
+
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    ->
+
+    ->     -- Open the cursor
+
+    ->     OPEN emp_cursor;
+
+    ->
+
+    ->     -- Loop through the cursor
+
+    ->     read_loop: LOOP
+
+    ->         FETCH emp_cursor INTO emp_id;
+
+    ->         IF done THEN
+
+    ->             LEAVE read_loop;
+
+    ->         END IF;
+
+    ->         -- Delete the employee
+
+    ->         DELETE FROM Employees WHERE employee_id = emp_id;
+
+    ->     END LOOP;
+
+    ->
+
+    ->     -- Commit the changes
+
+    ->     COMMIT;
+
+    ->
+
+    ->     -- Close the cursor
+
+    ->     CLOSE emp_cursor;
+
+    -> END$$
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql>
+
+mysql> DELIMITER ;
+
+mysql> CALL delete_sales_add_employees();
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> CALL count_employees();
+
+ERROR 1305 (42000): PROCEDURE accounts.count_employees does not exist
+
+mysql> DELIMITER $$
+
+mysql>
+
+mysql> CREATE PROCEDURE fetch_high_salary_employees()
+
+    -> BEGIN
+
+    ->     -- Looping directly with a FOR loop (simpler in MySQL 5.0+)
+
+    ->     DECLARE emp_name VARCHAR(100);
+
+    ->     DECLARE emp_salary DECIMAL(10, 2);
+
+    ->
+
+    ->     -- Declare the cursor
+
+    ->     DECLARE emp_cursor CURSOR FOR
+
+    ->         SELECT employee_name, salary
+
+    ->         FROM Employees
+
+    ->         WHERE salary > 5000;
+
+    ->
+
+    ->     -- Open the cursor
+
+    ->     OPEN emp_cursor;
+
+    ->
+
+    ->     -- FOR loop to fetch and display employee details
+
+    ->     read_loop: LOOP
+
+    ->         FETCH emp_cursor INTO emp_name, emp_salary;
+
+    ->         IF NOT FOUND THEN
+
+    ->             LEAVE read_loop;
+
+    ->         END IF;
+
+    ->         -- Print the employee details
+
+    ->         SELECT emp_name AS "Employee Name", emp_salary AS "Salary";
+
+    ->     END LOOP;
+
+    ->
+
+    ->     -- Close the cursor
+
+    ->     CLOSE emp_cursor;
+
+    -> END$$
+
+ERROR 1304 (42000): PROCEDURE fetch_high_salary_employees already exists
+
+mysql>
+
+mysql> DELIMITER ;
+
+mysql> CALL fetch_high_salary_employees();
+
+ERROR 1054 (42S22): Unknown column 'FOUND' in 'field list'
+
+mysql> DELIMITER $$
+
+mysql>
+
+mysql> CREATE PROCEDURE fetch_high_salary_employees()
+
+    -> BEGIN
+
+    ->     -- Declare necessary variables
+
+    ->     DECLARE done INT DEFAULT 0;
+
+    ->     DECLARE emp_name VARCHAR(100);
+
+    ->     DECLARE emp_salary DECIMAL(10, 2);
+
+    ->
+
+    ->     -- Declare the cursor for employees earning more than 5000
+
+    ->     DECLARE emp_cursor CURSOR FOR
+
+    ->         SELECT employee_name, salary
+
+    ->         FROM Employees
+
+    ->         WHERE salary > 5000;
+
+    ->
+
+    ->     -- Declare the continue handler for cursor NOT FOUND condition
+
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    ->
+
+    ->     -- Open the cursor
+
+    ->     OPEN emp_cursor;
+
+    ->
+
+    ->     -- Loop to fetch and display employee details
+
+    ->     read_loop: LOOP
+
+    ->         FETCH emp_cursor INTO emp_name, emp_salary;
+
+    ->         IF done THEN
+
+    ->             LEAVE read_loop;
+
+    ->         END IF;
+
+    ->         -- Print the employee details
+
+    ->         SELECT emp_name AS "Employee Name", emp_salary AS "Salary";
+
+    ->     END LOOP;
+
+    ->
+
+    ->     -- Close the cursor
+
+    ->     CLOSE emp_cursor;
+
+    -> END$$
+
+ERROR 1304 (42000): PROCEDURE fetch_high_salary_employees already exists
+
+mysql>
+
+mysql> DELIMITER ;
+
+mysql> CALL fetch_high_salary_employees();
+
+ERROR 1054 (42S22): Unknown column 'FOUND' in 'field list'
+
+mysql> DELIMITER $$
+
+mysql>
+
+mysql> CREATE PROCEDURE fetch_high_salary_employees()
+
+    -> BEGIN
+
+    ->     DECLARE done INT DEFAULT 0;
+
+    ->     DECLARE emp_name VARCHAR(100);
+
+    ->     DECLARE emp_salary DECIMAL(10, 2);
+
+    ->
+
+    ->     -- Declare the cursor
+
+    ->     DECLARE emp_cursor CURSOR FOR
+
+    ->         SELECT employee_name, salary
+
+    ->         FROM Employees
+
+    ->         WHERE salary > 5000;
+
+    ->
+
+    ->     -- Declare the continue handler to handle NOT FOUND condition
+
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    ->
+
+    ->     -- Open the cursor
+
+    ->     OPEN emp_cursor;
+
+    ->
+
+    ->     -- Loop through the cursor
+
+    ->     read_loop: LOOP
+
+    ->         FETCH emp_cursor INTO emp_name, emp_salary;
+
+    ->         IF done THEN
+
+    ->             LEAVE read_loop;
+
+    ->         END IF;
+
+    ->         -- Print the employee details
+
+    ->         SELECT emp_name AS "Employee Name", emp_salary AS "Salary";
+
+    ->     END LOOP;
+
+    ->
+
+    ->     -- Close the cursor
+
+    ->     CLOSE emp_cursor;
+
+    -> END$$
+
+ERROR 1304 (42000): PROCEDURE fetch_high_salary_employees already exists
+
+mysql>
+
+mysql> DELIMITER ;
+
+mysql> CALL fetch_high_salary_employees();
+
+ERROR 1054 (42S22): Unknown column 'FOUND' in 'field list'
+
+mysql> -- Check Customers table data
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> SELECT * FROM Customers;
+
++-------------+------------+-----------+------+---------+
+
+| customer_id | first_name | last_name | age  | country |
+
++-------------+------------+-----------+------+---------+
+
+|           1 | John       | Doe       |   31 | USA     |
+
+|           2 | Robert     | Luna      |   22 | USA     |
+
+|           3 | David      | Robinson  |   22 | UK      |
+
+|           4 | John       | Reinhardt |   25 | UK      |
+
+|           5 | Betty      | Doe       |   28 | UAE     |
+
++-------------+------------+-----------+------+---------+
+
+5 rows in set (0.00 sec)
+
+
+
+mysql>
+
+mysql> -- Check Departments table data
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> SELECT * FROM Departments;
+
++---------------+-----------------+
+
+| department_id | department_name |
+
++---------------+-----------------+
+
+|            10 | Sales_add       |
+
+|            20 | Marketing       |
+
+|            30 | HR              |
+
+|            40 | IT              |
+
++---------------+-----------------+
+
+4 rows in set (0.00 sec)
+
+
+
+mysql>
+
+mysql> -- Check Employees table data
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> SELECT * FROM Employees;
+
++-------------+---------------+---------+---------------+
+
+| employee_id | employee_name | salary  | department_id |
+
++-------------+---------------+---------+---------------+
+
+|           2 | Surya         | 4500.00 |            20 |
+
+|           4 | Alfred        | 7000.00 |            30 |
+
+|           5 | Sunder        | 8000.00 |            40 |
+
++-------------+---------------+---------+---------------+
+
+3 rows in set (0.00 sec)
+
+
+
+mysql>
+
+mysql> -- Check Orders table data
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> SELECT * FROM Orders;
+
++----------+----------+----------+-------------+
+
+| order_id | item     | amount   | customer_id |
+
++----------+----------+----------+-------------+
+
+|        1 | Keyboard |   400.00 |           4 |
+
+|        2 | Mouse    |   300.00 |           4 |
+
+|        3 | Monitor  | 12000.00 |           3 |
+
+|        4 | Keyboard |   400.00 |           1 |
+
+|        5 | Mousepad |   250.00 |           2 |
+
++----------+----------+----------+-------------+
+
+5 rows in set (0.00 sec)
+
+
+
+mysql>
+
+mysql> -- Check Shippings table data
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+mysql> SELECT * FROM Shippings;
+
++-------------+-----------+----------+
+
+| shipping_id | status    | customer |
+
++-------------+-----------+----------+
+
+|           1 | Pending   |        2 |
+
+|           2 | Pending   |        4 |
+
+|           3 | Delivered |        3 |
+
+|           4 | Pending   |        5 |
+
+|           5 | Delivered |        1 |
+
++-------------+-----------+----------+
+
+5 rows in set (0.00 sec)
+
+
+
+mysql>
